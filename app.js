@@ -3,6 +3,8 @@
 // Router hash + componentes + páginas + event delegation
 // =====================================================================
 
+const VERSION = '0.1';
+
 import { CATEGORIES, METHODS, DIFFICULTIES, recipePhotoHtml } from './data.js';
 import {
   seedIfEmpty, getAllRecipes, getRecipe, putRecipe, deleteRecipe,
@@ -202,7 +204,8 @@ async function renderHome() {
   return `<div class="home">
     <header class="home__header">
       <div>
-        ${eyebrow('UN CUADERNO · 2026', 'eyebrow--small')}
+        ${eyebrow(`UN CUADERNO · 2026`, 'eyebrow--small')}
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--accent);opacity:0.5;margin-top:2px;display:block">v${VERSION}</span>
         <div class="home__monogram">libro-recetas</div>
       </div>
       <nav aria-label="Navegación principal">
