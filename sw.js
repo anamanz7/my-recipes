@@ -1,4 +1,4 @@
-const CACHE = 'my-recipes-v4';
+const CACHE = 'my-recipes-v5';
 const BASE  = '/my-recipes';
 const SHELL = [
   BASE + '/',
@@ -7,6 +7,7 @@ const SHELL = [
   BASE + '/data.js',
   BASE + '/db.js',
   BASE + '/app.js',
+  BASE + '/supabase.js',
   BASE + '/manifest.json',
   BASE + '/icons/icon-192.svg',
   BASE + '/icons/icon-512.svg',
