@@ -1514,16 +1514,19 @@ em.match {
 
 /* --- Featured (izquierda tall) --- */
 .bento-featured {
-  background: var(--color-beige);
+  background: var(--color-terra);
   padding: 24px;
   display: flex;
   flex-direction: column;
   min-height: 420px;
   text-decoration: none;
-  color: var(--text);
+  color: var(--color-light);
   transition: opacity 250ms ease;
 }
-.bento-featured:hover { opacity: 0.92; color: var(--text); }
+.bento-featured:hover { opacity: 0.92; color: var(--color-light); }
+
+.bento-featured .bento-date { color: var(--color-beige); opacity: 0.75; }
+.bento-note .bento-date    { color: var(--color-olive); opacity: 1; }
 
 .bento-featured__art {
   flex: 1;
@@ -1538,7 +1541,7 @@ em.match {
   font-weight: var(--fw-bold);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--color-beige);
   display: flex;
   gap: 14px;
   margin-bottom: 10px;
@@ -1550,16 +1553,16 @@ em.match {
   font-weight: var(--fw-black);
   line-height: 1.05;
   margin: 0 0 10px;
-  color: var(--text);
+  color: var(--color-light);
 }
-.bento-featured__title em { font-style: italic; color: var(--accent); }
+.bento-featured__title em { font-style: italic; color: var(--color-olive); }
 
 .bento-featured__desc {
   font-size: 14px;
   font-weight: var(--fw-regular);
   line-height: 1.55;
-  color: var(--text);
-  opacity: 0.7;
+  color: var(--color-light);
+  opacity: 0.8;
   margin-bottom: 22px;
   max-width: 380px;
 }
@@ -1568,8 +1571,8 @@ em.match {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--color-light);
+  color: var(--color-dark);
   padding: 12px 20px;
   font-size: 12px;
   font-weight: var(--fw-bold);
@@ -1712,7 +1715,7 @@ em.match {
 .bento-shopping__link:hover { color: var(--text); }
 
 .bento-note {
-  background: var(--color-terra);
+  background: var(--color-dark);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -1724,8 +1727,7 @@ em.match {
   font-weight: var(--fw-bold);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-light);
-  opacity: 0.75;
+  color: var(--color-olive);
 }
 
 .bento-note__text {
@@ -1733,7 +1735,7 @@ em.match {
   font-weight: var(--fw-regular);
   line-height: 1.45;
   font-style: italic;
-  color: var(--color-light);
+  color: var(--color-beige);
   flex: 1;
   margin: 0;
 }
@@ -1743,8 +1745,8 @@ em.match {
   font-weight: var(--fw-bold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-light);
-  opacity: 0.6;
+  color: var(--color-beige);
+  opacity: 0.55;
 }
 
 /* --- Responsive --- */

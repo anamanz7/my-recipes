@@ -268,10 +268,6 @@ async function renderHome() {
               <span class="bento-stat__num">${cooked || 0}</span>
               <span class="bento-stat__label">COCINADAS</span>
             </div>
-            <div class="bento-stat">
-              <span class="bento-stat__num">v${VERSION}</span>
-              <span class="bento-stat__label">VERSIÓN</span>
-            </div>
           </div>
 
           <div class="bento-cards-row">
