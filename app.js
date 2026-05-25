@@ -1195,7 +1195,12 @@ async function saveRecipeForm(form) {
     updatedAt:   Date.now(),
   };
 
-  await putRecipe(recipe);
+  try {
+    await putRecipe(recipe);
+  } catch (err) {
+    alert(`No se pudo guardar la receta. Comprueba la conexión.\n(${err?.message ?? err})`);
+    return;
+  }
   state.recipes = await getAllRecipes();
   location.hash = `#/recetas/${id}`;
 }
