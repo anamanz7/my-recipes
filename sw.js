@@ -1,4 +1,4 @@
-const CACHE = 'my-recipes-v1';
+const CACHE = 'my-recipes-v2';
 const BASE  = '/my-recipes';
 const SHELL = [
   BASE + '/',
@@ -7,10 +7,17 @@ const SHELL = [
   BASE + '/data.js',
   BASE + '/db.js',
   BASE + '/app.js',
-  BASE + '/fonts/Syne-VariableFont_wght.ttf',
   BASE + '/manifest.json',
   BASE + '/icons/icon-192.svg',
   BASE + '/icons/icon-512.svg',
+  BASE + '/monoglyceride/Monoglyceride.ttf',
+  BASE + '/monoglyceride/MonoglycerideBold.ttf',
+  BASE + '/monoglyceride/MonoglycerideDemiBold.ttf',
+  BASE + '/monoglyceride/MonoglycerideExtraBold.ttf',
+  BASE + '/josefin-sans/JosefinSans-Regular.ttf',
+  BASE + '/josefin-sans/JosefinSans-SemiBold.ttf',
+  BASE + '/josefin-sans/JosefinSans-Bold.ttf',
+  BASE + '/josefin-sans/JosefinSans-Light.ttf',
 ];
 
 self.addEventListener('install', e => {
