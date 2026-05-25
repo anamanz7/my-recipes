@@ -3,7 +3,7 @@
 // Router hash + componentes + páginas + event delegation
 // =====================================================================
 
-const VERSION = '0.2';
+const VERSION = '0.3';
 
 import { CATEGORIES, METHODS, DIFFICULTIES, recipePhotoHtml } from './data.js';
 import {
@@ -157,92 +157,143 @@ function recipeRow(r, idx) {
 
 // ---- HOME -----------------------------------------------------------
 async function renderHome() {
-  const recipes = state.recipes;
-  const count   = recipes.length;
-  const recent  = recipes.slice(-3).reverse();
+  const recipes  = state.recipes;
+  const count    = recipes.length;
+  const cooked   = await getStat('cooked');
+  const shopping = await getAllShopping();
 
-  const recentItems = recent.map(r => {
-    const thumb = recipePhotoHtml(r, { className: 'home__recent-thumb' });
-    return `<a href="#/recetas/${r.id}" class="home__recent-item">
-      ${thumb}
-      <div>
-        <span class="home__recent-title">${esc(r.title)}</span>
-        <span class="home__recent-meta">${esc(r.method)} · ${r.time} min</span>
+  // Fecha y hora actuales
+  const DAYS = ['DOMINGO','LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO'];
+  const now  = new Date();
+  const dateStr = `${DAYS[now.getDay()]} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // Receta destacada (la más reciente) y miniaturas (las dos anteriores)
+  const featured = recipes.length ? recipes[recipes.length - 1] : null;
+  const cardRecipes = recipes.length >= 3
+    ? [recipes[recipes.length - 2], recipes[recipes.length - 3]]
+    : recipes.length === 2
+      ? [recipes[0], recipes[1]]
+      : recipes.length === 1
+        ? [recipes[0], null]
+        : [null, null];
+
+  // Lista de compra
+  const pending     = shopping.filter(i => !i.done);
+  const chipItems   = pending.slice(0, 4);
+  const moreCount   = pending.length > 4 ? pending.length - 4 : 0;
+  const shoppingHtml = shopping.length === 0
+    ? `<span class="bento-shopping__count" style="opacity:0.5">Lista vacía</span>`
+    : `<span class="bento-shopping__count">Faltan ${pending.length} de ${shopping.length}</span>
+       <div class="bento-shopping__chips">
+         ${chipItems.map(i => `<span class="bento-shopping__chip">${esc(i.name)}</span>`).join('')}
+         ${moreCount ? `<span class="bento-shopping__chip">+ ${moreCount} más</span>` : ''}
+       </div>`;
+
+  // Nota — del campo notes de la receta destacada
+  const noteText   = featured?.notes || 'Guarda trucos y apuntes mientras cocinas.';
+  const noteSource = featured?.notes ? `— ${esc(featured.title).toUpperCase()}` : '';
+
+  // Tarjeta destacada
+  const featuredHtml = featured ? `
+    <a href="#/recetas/${esc(featured.id)}" class="bento-featured">
+      <span class="bento-date">DESTACADA · ESTA SEMANA</span>
+      <div class="bento-featured__art">
+        ${recipePhotoHtml(featured, { style: 'width:160px;height:160px' })}
       </div>
-      <span class="accent">→</span>
-    </a>`;
-  }).join('');
+      <div class="bento-featured__meta">
+        <span>${featured.time} min</span>
+        <span>${featured.servings} pers</span>
+      </div>
+      <h2 class="bento-featured__title">${esc(featured.title)}</h2>
+      <p class="bento-featured__desc">${esc(featured.blurb || '')}</p>
+      <span class="bento-featured__btn">Ver receta →</span>
+    </a>
+  ` : `
+    <div class="bento-featured" style="align-items:center;justify-content:center;text-align:center">
+      <p style="font-size:18px;color:var(--accent)">Aún no hay recetas —<br><a href="#/nueva" style="color:var(--text)">añade la primera →</a></p>
+    </div>
+  `;
 
-  const navLinks = [
-    ['01', 'Índice',         `${count} recetas`,     '#/recetas'],
-    ['02', 'Categorías',     '5 colecciones',        '#/categorias'],
-    ['03', 'Lista de compra', '',                    '#/compra'],
-    ['04', 'Nueva receta',   '',                     '#/nueva'],
-  ].map(([num, name, meta, href]) => `
-    <li>
-      <a href="${href}" class="home__nav-link">
-        <span style="display:flex;align-items:baseline;gap:var(--sp-4)">
-          <span class="home__nav-num">${num}</span>
-          <span>${esc(name)}</span>
-        </span>
-        ${meta ? `<span class="home__nav-meta">${esc(meta)}</span>` : '<span></span>'}
+  // Miniaturas
+  const miniCard = (r, light = false) => r ? `
+    <a href="#/recetas/${esc(r.id)}" class="bento-card ${light ? 'bento-card--light' : ''}">
+      <div class="bento-card__art">${recipePhotoHtml(r, { style: 'width:44px;height:44px' })}</div>
+      <div class="bento-card__title">${esc(r.title)}</div>
+      <div class="bento-card__meta">${esc(r.category)} · ${r.time} min</div>
+    </a>
+  ` : `<div class="bento-card bento-card--light" style="opacity:0.3"></div>`;
+
+  return `<div class="bento-home">
+    <header class="bento-nav">
+      <a href="#/" class="bento-nav__logo">
+        <span class="bento-nav__icon">✦</span>
+        libro-recetas
       </a>
-    </li>`).join('');
-
-  return `<div class="home">
-    <header class="home__header">
-      <div>
-        ${eyebrow(`UN CUADERNO · 2026`, 'eyebrow--small')}
-        <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--accent);opacity:0.5;margin-top:2px;display:block">v${VERSION}</span>
-        <div class="home__monogram">libro-recetas</div>
-      </div>
       <nav aria-label="Navegación principal">
-        <ul class="home__nav">${navLinks}</ul>
+        <ul class="bento-nav__links">
+          <li><a href="#/recetas" class="bento-nav__link">Recetario</a></li>
+          <li><a href="#/buscar" class="bento-nav__link">Buscar</a></li>
+          <li><a href="#/compra" class="bento-nav__link">Compra</a></li>
+          <li><a href="#/nueva" class="bento-nav__cta">+ Nueva</a></li>
+        </ul>
       </nav>
     </header>
 
-    <div class="home__center">
+    <div class="bento-body">
       <div>
-        <h1 class="home__h1">
-          Recetas que ya cocinas —
-          <em class="not-italic accent">escritas como las haces.</em>
-        </h1>
-        <p class="home__blurb">
-          Un cuaderno digital para cenas de viernes, comidas rápidas de martes
-          y los trucos que solo recuerdas a medias. Sin pasos de relleno.
-        </p>
+        <span class="bento-date">${dateStr}</span>
+        <h1 class="bento-h1">¿Qué cocinas <em>hoy</em>?</h1>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="#/recetas" data-action="filter-time" data-value="20" class="chip">algo rápido</a>
+          <a href="#/recetas" class="chip">ver todo</a>
+          <a href="#/categorias" class="chip">categorías</a>
+          <a href="#/buscar" class="chip">buscar</a>
+        </div>
       </div>
 
-      <div>
-        ${rule()}
-        <div style="display:flex;justify-content:space-between;margin:var(--sp-4) 0">
-          ${eyebrow('Últimas añadidas')}
+      <div class="bento-grid">
+        ${featuredHtml}
+
+        <div class="bento-right">
+          <div class="bento-stats">
+            <div class="bento-stat">
+              <span class="bento-stat__num">${count}</span>
+              <span class="bento-stat__label">RECETAS</span>
+            </div>
+            <div class="bento-stat">
+              <span class="bento-stat__num">${CATEGORIES.length}</span>
+              <span class="bento-stat__label">COLECCIONES</span>
+            </div>
+            <div class="bento-stat">
+              <span class="bento-stat__num">${cooked || 0}</span>
+              <span class="bento-stat__label">COCINADAS</span>
+            </div>
+            <div class="bento-stat">
+              <span class="bento-stat__num">v${VERSION}</span>
+              <span class="bento-stat__label">VERSIÓN</span>
+            </div>
+          </div>
+
+          <div class="bento-cards-row">
+            ${miniCard(cardRecipes[0], false)}
+            ${miniCard(cardRecipes[1], true)}
+          </div>
+
+          <div class="bento-bottom-row">
+            <div class="bento-shopping">
+              <span class="bento-date">LISTA DE LA COMPRA</span>
+              ${shoppingHtml}
+              <a href="#/compra" class="bento-shopping__link">Abrir →</a>
+            </div>
+            <div class="bento-note">
+              <span class="bento-note__label">Tu nota</span>
+              <p class="bento-note__text">"${esc(noteText)}"</p>
+              ${noteSource ? `<span class="bento-note__source">${noteSource}</span>` : ''}
+            </div>
+          </div>
         </div>
-        ${recentItems || '<p class="accent" style="font-size:18px;margin-top:var(--sp-4)">Aún no hay recetas — <a href="#/nueva">añade la primera →</a></p>'}
       </div>
     </div>
-
-    <footer>
-      ${rule()}
-      <div class="home__stats" style="margin-top:var(--sp-5)">
-        <div>
-          <div class="home__stat-num">${count}</div>
-          ${eyebrow('Recetas guardadas', 'eyebrow--small')}
-        </div>
-        <div>
-          <div class="home__stat-num">5</div>
-          ${eyebrow('Colecciones', 'eyebrow--small')}
-        </div>
-        <div>
-          <div class="home__stat-num">${CATEGORIES.length}</div>
-          ${eyebrow('Categorías', 'eyebrow--small')}
-        </div>
-        <div>
-          <div class="home__stat-num">0</div>
-          ${eyebrow('Esta semana', 'eyebrow--small')}
-        </div>
-      </div>
-    </footer>
   </div>`;
 }
 
