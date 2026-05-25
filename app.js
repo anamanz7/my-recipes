@@ -3,7 +3,7 @@
 // Router hash + componentes + páginas + event delegation
 // =====================================================================
 
-const VERSION = '0.1';
+const VERSION = '0.2';
 
 import { CATEGORIES, METHODS, DIFFICULTIES, recipePhotoHtml } from './data.js';
 import {
@@ -17,7 +17,6 @@ import {
 // =====================================================================
 const state = {
   recipes:   [],
-  theme:     localStorage.getItem('theme') || 'a',
   // página detalle
   servings:  {},   // { recipeId: number }
   doneSteps: {},   // { recipeId: Set<number> }
@@ -70,17 +69,6 @@ function highlightMatch(text, q) {
   return esc(text).replace(re, '<em class="match">$1</em>');
 }
 
-// =====================================================================
-// TEMA
-// =====================================================================
-function applyTheme(t) {
-  state.theme = t;
-  document.documentElement.dataset.theme = t;
-  localStorage.setItem('theme', t);
-  document.querySelectorAll('.theme-dot').forEach(d => {
-    d.classList.toggle('active', d.dataset.themeVal === t);
-  });
-}
 
 // =====================================================================
 // COMPONENTES HTML
@@ -849,11 +837,6 @@ async function handleAction(action, el) {
 
   switch (action) {
 
-    // Tema
-    case 'set-theme':
-      applyTheme(el.dataset.themeVal);
-      break;
-
     // Filtros índice
     case 'filter-category':
       state.filter.category = state.filter.category === value ? null : value;
@@ -1062,19 +1045,12 @@ async function init() {
     } catch {}
   });
 
-  // Aplicar tema guardado
-  applyTheme(state.theme);
-
   // Navegación por hash
   window.addEventListener('hashchange', () => navigate(currentPath()));
   navigate(currentPath());
 
   // Event delegation global en #app
   document.getElementById('app').addEventListener('click', async e => {
-    // Tema
-    const dot = e.target.closest('.theme-dot');
-    if (dot) { applyTheme(dot.dataset.themeVal); return; }
-
     // Acciones
     const actionEl = e.target.closest('[data-action]');
     if (actionEl) {

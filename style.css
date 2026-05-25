@@ -1,13 +1,63 @@
 /* =====================================================================
    libro-recetas — Design System
-   Syne variable · 3 temas · sin sombras · sin border-radius en layout
+   Monoglyceride (títulos) · Josefin Sans (cuerpo) · paleta portfolio
    ===================================================================== */
 
-/* --- Fuente --------------------------------------------------------- */
+/* --- Fuentes -------------------------------------------------------- */
 @font-face {
-  font-family: 'Syne';
-  src: url('fonts/Syne-VariableFont_wght.ttf') format('truetype-variations');
-  font-weight: 400 800;
+  font-family: 'Monoglyceride';
+  src: url('monoglyceride/Monoglyceride.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Monoglyceride';
+  src: url('monoglyceride/MonoglycerideDemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Monoglyceride';
+  src: url('monoglyceride/MonoglycerideBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Monoglyceride';
+  src: url('monoglyceride/MonoglycerideExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Josefin Sans';
+  src: url('josefin-sans/JosefinSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Josefin Sans';
+  src: url('josefin-sans/JosefinSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Josefin Sans';
+  src: url('josefin-sans/JosefinSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Josefin Sans';
+  src: url('josefin-sans/JosefinSans-Light.ttf') format('truetype');
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -16,23 +66,27 @@
    TOKENS
    ===================================================================== */
 :root {
-  /* Paleta cruda */
-  --color-beige:  #D9C8B4;
-  --color-peach:  #F2B680;
-  --color-orange: #F2884B;
-  --color-coral:  #D95A4E;
-  --color-red:    #F20505;
-  --color-ink:    #2B0F0A;
-  --color-white:  #FFFFFF;
+  /* Paleta portfolio */
+  --color-cream:         #f8f6f4;
+  --color-light-beige:   #ebe6e3;
+  --color-beige-accent:  #d4c4ba;
+  --color-sand:          #c4a9a0;
+  --color-metallic-rose: #c9a9a1;
+  --color-metallic-mauve:#b39b9a;
+  --color-dark-mauve:    #8b7074;
+  --color-dark-text:     #2a2a2a;
+  --color-soft-gray:     #666666;
+  --color-white:         #ffffff;
 
-  /* Roles semánticos — tema Crema (default) */
-  --bg:     var(--color-beige);
-  --text:   var(--color-coral);
-  --accent: var(--color-ink);
+  /* Roles semánticos */
+  --bg:     var(--color-cream);
+  --text:   var(--color-dark-text);
+  --accent: var(--color-dark-mauve);
   --border: var(--accent);
 
   /* Tipografía */
-  --font: 'Syne', system-ui, sans-serif;
+  --font:       'Josefin Sans', system-ui, sans-serif;
+  --font-title: 'Monoglyceride', system-ui, sans-serif;
   --fw-regular: 400;
   --fw-bold:    700;
   --fw-black:   800;
@@ -67,26 +121,6 @@
        border-color 500ms ease, fill 500ms ease, stroke 500ms ease;
 }
 
-/* Tema Crema (a) — light */
-[data-theme="a"] {
-  --bg:     var(--color-beige);
-  --text:   var(--color-coral);
-  --accent: var(--color-ink);
-}
-
-/* Tema Coral (m) — mid */
-[data-theme="m"] {
-  --bg:     var(--color-coral);
-  --text:   var(--color-beige);
-  --accent: var(--color-ink);
-}
-
-/* Tema Tinta (c) — dark */
-[data-theme="c"] {
-  --bg:     var(--color-ink);
-  --text:   var(--color-beige);
-  --accent: var(--color-coral);
-}
 
 /* =====================================================================
    RESET Y BASE
@@ -114,7 +148,7 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: var(--font);
+  font-family: var(--font-title);
   font-weight: var(--fw-black);
   margin: 0;
   line-height: 1.05;
@@ -609,28 +643,6 @@ input, select, textarea {
   text-align: center;
 }
 
-/* =====================================================================
-   BARRA DE TEMA (selector top-right)
-   ===================================================================== */
-.theme-bar {
-  position: fixed;
-  top: var(--sp-4);
-  right: var(--sp-4);
-  display: flex;
-  gap: 6px;
-  z-index: 200;
-}
-.theme-dot {
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--accent);
-  cursor: pointer;
-  transition: var(--t);
-}
-.theme-dot[data-theme-val="a"] { background: var(--color-beige); }
-.theme-dot[data-theme-val="m"] { background: var(--color-coral); }
-.theme-dot[data-theme-val="c"] { background: var(--color-ink); }
-.theme-dot.active { outline: 2px solid var(--text); outline-offset: 2px; }
 
 /* =====================================================================
    PAGE: HOME
