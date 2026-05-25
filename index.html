@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="a">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>libro-recetas</title>
+  <meta name="description" content="Un cuaderno digital para cenas de viernes, comidas rápidas de martes y los trucos que solo recuerdas a medias.">
+  <meta name="theme-color" content="#D9C8B4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Recetas">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Saltar al contenido</a>
+
+  <div class="theme-bar" role="toolbar" aria-label="Selector de tema">
+    <button class="theme-dot active" data-theme-val="a" aria-label="Tema Crema (claro)" title="Crema"></button>
+    <button class="theme-dot" data-theme-val="m" aria-label="Tema Coral" title="Coral"></button>
+    <button class="theme-dot" data-theme-val="c" aria-label="Tema Tinta (oscuro)" title="Tinta"></button>
+  </div>
+
+  <div id="app">
+    <main id="main" tabindex="-1">
+      <div class="empty-state" aria-live="polite">
+        <p>Cargando recetas…</p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/my-recipes/sw.js', { scope: '/my-recipes/' })
+        .catch(err => console.warn('SW:', err));
+    }
+  </script>
+</body>
+</html>
