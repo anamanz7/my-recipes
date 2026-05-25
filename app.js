@@ -1077,12 +1077,22 @@ async function handleAction(action, el) {
 // INIT
 // =====================================================================
 async function init() {
-  // Seed BD si está vacía
-  await seedIfEmpty();
+  const main = document.getElementById('main');
 
-  // Cargar datos en estado
-  state.recipes  = await getAllRecipes();
-  state.shopping = await getAllShopping();
+  try {
+    await seedIfEmpty();
+    state.recipes  = await getAllRecipes();
+    state.shopping = await getAllShopping();
+  } catch (err) {
+    console.error('Error al conectar con la base de datos:', err);
+    if (main) main.innerHTML = `
+      <div class="empty-state" style="padding:var(--sp-8) var(--sp-5);text-align:center">
+        <p style="font-size:20px;font-weight:700;margin-bottom:var(--sp-4)">Sin conexión</p>
+        <p style="color:var(--soft);margin-bottom:var(--sp-6)">No se pudo cargar el recetario.<br>Comprueba tu conexión a internet.</p>
+        <button class="cta" onclick="location.reload()">Reintentar →</button>
+      </div>`;
+    return;
+  }
 
   // Restaurar pasos completados desde localStorage
   state.recipes.forEach(r => {

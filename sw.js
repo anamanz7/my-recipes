@@ -1,4 +1,4 @@
-const CACHE = 'my-recipes-v5';
+const CACHE = 'my-recipes-v6';
 const BASE  = '/my-recipes';
 const SHELL = [
   BASE + '/',
@@ -9,8 +9,8 @@ const SHELL = [
   BASE + '/app.js',
   BASE + '/supabase.js',
   BASE + '/manifest.json',
-  BASE + '/icons/icon-192.svg',
-  BASE + '/icons/icon-512.svg',
+  BASE + '/icons/icon-192.png',
+  BASE + '/icons/icon-512.png',
   BASE + '/monoglyceride/Monoglyceride.ttf',
   BASE + '/monoglyceride/MonoglycerideBold.ttf',
   BASE + '/monoglyceride/MonoglycerideDemiBold.ttf',
@@ -45,7 +45,13 @@ self.addEventListener('fetch', e => {
         const clone = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, clone));
         return res;
-      }).catch(() => caches.match(BASE + '/index.html'));
+      }).catch(() => {
+        // Only serve the HTML shell for page navigations.
+        // For JS module imports (CDN) or other assets, return a plain 503
+        // so the error surfaces properly instead of silently hanging.
+        if (e.request.mode === 'navigate') return caches.match(BASE + '/index.html');
+        return new Response('', { status: 503, statusText: 'Offline' });
+      });
     })
   );
 });
