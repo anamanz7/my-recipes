@@ -82,14 +82,15 @@ export async function incrementStat(key, by = 1) {
 
 export async function seedIfEmpty() {
   try {
-    const { count } = await sb.from('recipes').select('id', { count: 'exact', head: true });
-    if (count > 0) return;
+    const { data: existing, error } = await sb.from('recipes').select('id');
+    if (error) throw error;
+    const existingIds = new Set((existing || []).map(r => r.id));
     for (const r of RECIPES) {
-      await putRecipe({ ...r, createdAt: Date.now() });
+      if (!existingIds.has(r.id)) {
+        await putRecipe({ ...r, createdAt: Date.now() });
+      }
     }
   } catch (err) {
-    // If seeding fails (e.g. RLS not disabled, write permissions), skip silently.
-    // The app will show the empty state but remain functional.
     console.warn('seedIfEmpty: no se pudo sembrar la BD —', err?.message ?? err);
   }
 }
