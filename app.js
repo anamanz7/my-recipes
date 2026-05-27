@@ -3,7 +3,7 @@
 // Router hash + componentes + páginas + event delegation
 // =====================================================================
 
-const VERSION = '0.5';
+const VERSION = '0.6';
 
 import { CATEGORIES, METHODS, DIFFICULTIES, recipePhotoHtml } from './data.js';
 import {

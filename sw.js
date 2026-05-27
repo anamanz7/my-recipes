@@ -1,4 +1,4 @@
-const CACHE = 'my-recipes-v7';
+const CACHE = 'my-recipes-v8';
 const BASE  = '/my-recipes';
 const SHELL = [
   BASE + '/',
