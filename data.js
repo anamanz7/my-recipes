@@ -263,6 +263,35 @@ export const RECIPES = [
     ],
     notes: 'La ricota y la albahaca van siempre después de hornear — el calor residual es suficiente y así conservan textura y aroma.',
   },
+  {
+    id: 'tarta-reeses',
+    title: 'Tarta de queso',
+    titleAccent: 'sabor Reese\'s',
+    category: 'Postres',
+    method: 'Airfryer',
+    time: 30,
+    servings: 6,
+    difficulty: 'Fácil',
+    blurb: 'Sin base, sin horno, sin culpa. Textura de cheesecake con el sabor del chocolate y cacahuete que conoces.',
+    photo: null,
+    photoShape: 'circle',
+    photoTone: 'ink',
+    ingredients: [
+      { qty: '3',   unit: '',        name: 'huevos' },
+      { qty: '300', unit: 'g',       name: 'queso crema light' },
+      { qty: '3',   unit: 'cdas',    name: 'crema de cacahuete' },
+      { qty: '2',   unit: '',        name: 'yogures naturales light' },
+      { qty: '2–3', unit: 'cdas',    name: 'eritritol granulado (al gusto)' },
+      { qty: '9',   unit: '',        name: 'mini Reese\'s Mercadona' },
+    ],
+    steps: [
+      { heading: 'Mezclar en el bol',  desc: 'Pon los huevos, el queso crema, la crema de cacahuete, los yogures y el eritritol. Bate con varillas hasta obtener una crema lisa y sin grumos. Prueba y ajusta el dulzor.' },
+      { heading: 'Los Reese\'s',       desc: 'Trocea la mayoría de los mini Reese\'s y mézclalos en la masa. Reserva 2–3 piezas enteras para decorar la superficie.' },
+      { heading: 'Airfryer 180 °C',   desc: 'Vierte la masa en un molde pequeño apto para airfryer (aprox. 18 cm). Coloca los Reese\'s reservados encima. 19 minutos a 180 °C. No abras antes del minuto 15.' },
+      { heading: 'Enfriar y servir',  desc: 'Deja reposar 15 minutos fuera del airfryer y después mínimo 1 hora en la nevera. El centro parece blando al salir — se asienta al enfriar.' },
+    ],
+    notes: 'Endulzante: el eritritol granulado (lo vende Mercadona) es la mejor opción — se disuelve bien y no deja regusto amargo como la stevia. Empieza con 2 cdas, prueba la masa cruda y añade más si hace falta.',
+  },
 ];
 
 export const CATEGORIES = [
