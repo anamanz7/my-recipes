@@ -3,7 +3,7 @@
 // Router hash + componentes + páginas + event delegation
 // =====================================================================
 
-const VERSION = '0.3';
+const VERSION = '0.4';
 
 import { CATEGORIES, METHODS, DIFFICULTIES, recipePhotoHtml } from './data.js';
 import {
@@ -1129,6 +1129,35 @@ async function init() {
 }
 
 // =====================================================================
+// COMPRIMIR IMAGEN (Canvas → JPEG, max 900px, q=0.75)
+// Evita que base64 de fotos de móvil supere el límite de Supabase
+// =====================================================================
+async function compressImage(file, maxWidth = 900, quality = 0.75) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width  = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// =====================================================================
 // GUARDAR FORMULARIO
 // =====================================================================
 async function saveRecipeForm(form) {
@@ -1167,12 +1196,7 @@ async function saveRecipeForm(form) {
   let photo = editing ? (state.recipes.find(r => r.id === editId)?.photo || null) : null;
   const photoFile = form.querySelector('[name="photo"]')?.files?.[0];
   if (photoFile) {
-    photo = await new Promise((res, rej) => {
-      const fr = new FileReader();
-      fr.onload  = () => res(fr.result);
-      fr.onerror = rej;
-      fr.readAsDataURL(photoFile);
-    });
+    photo = await compressImage(photoFile);
   }
 
   const recipe = {
